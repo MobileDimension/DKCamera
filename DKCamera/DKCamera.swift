@@ -764,26 +764,25 @@ open class DKCamera: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
                 #else
                 guard let connection = photoCapture.connection(withMediaType: AVMediaTypeVideo) else { return }
                 #endif
-                
-                guard let currentOrientation = self.currentOrientation else { return }
-                connection.videoOrientation = currentOrientation.toAVCaptureVideoOrientation()
+
+                connection.videoOrientation = self.currentOrientation?.toAVCaptureVideoOrientation() ?? .portrait
                 connection.videoScaleAndCropFactor = self.zoomScale
-                
+
                 let settings = AVCapturePhotoSettings(from: self.defaultPhotoSettings)
-                
+
                 let capturer = DKCameraPhotoCapturer()
-                
+
                 if let gpsMetadata = self.locationManager?.gpsMetadataForLatestLocation() {
                     capturer.gpsMetadata = gpsMetadata
                 }
-                
+
                 capturer.didCaptureWithImageData = { imageData in
                     process(imageData)
                     self.currentCapturer = nil
                 }
-                
+
                 photoCapture.capturePhoto(with: settings, delegate: capturer)
-                
+
                 self.currentCapturer = capturer
             }
         } else {
