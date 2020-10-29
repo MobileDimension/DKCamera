@@ -765,7 +765,8 @@ open class DKCamera: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
                 guard let connection = photoCapture.connection(withMediaType: AVMediaTypeVideo) else { return }
                 #endif
                 
-                connection.videoOrientation = self.currentOrientation.toAVCaptureVideoOrientation()
+                guard let currentOrientation = self.currentOrientation else { return }
+                connection.videoOrientation = currentOrientation.toAVCaptureVideoOrientation()
                 connection.videoScaleAndCropFactor = self.zoomScale
                 
                 let settings = AVCapturePhotoSettings(from: self.defaultPhotoSettings)
